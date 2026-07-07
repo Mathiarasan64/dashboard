@@ -2,18 +2,13 @@ import pandas as pd
 
 URL = "https://sheet.zohopublic.in/sheet/published/sfoej993e5907c3fb4e70a21047d22db57a9c?download=csv&sheetname=Sheet1"
 
+
 def load_data():
-    # Read CSV
+
     df = pd.read_csv(URL)
 
-    # Remove completely empty rows
+    # Remove empty rows
     df = df.dropna(how="all")
-
-    # Remove first row if it contains 'None'
-    if len(df) > 0:
-        first_row = df.iloc[0].astype(str).str.lower()
-        if first_row.str.contains("none").any():
-            df = df.iloc[1:]
 
     # Clean column names
     df.columns = (
@@ -22,20 +17,21 @@ def load_data():
         .str.replace("\n", " ", regex=False)
     )
 
-    # Rename columns
+    # Standardize column names
     df.rename(columns={
         "Students Name": "Student Name",
         "Payment type": "Payment Type",
-        "Payment Status (June": "Payment Status June",
-        "Payment Status (July": "Payment Status July"
+        "Payment Status (June)": "Payment Status June",
+        "Payment Status (July)": "Payment Status July",
     }, inplace=True)
 
-    # Remove rows where Student Name is empty
+    # Remove rows with empty student names
     if "Student Name" in df.columns:
-        df = df[df["Student Name"].notna()]
-        df = df[df["Student Name"].astype(str).str.strip() != ""]
+        df = df[
+            df["Student Name"].notna()
+        ]
 
-    # Convert currency columns
+    # Currency Columns
     money_columns = [
         "Total price",
         "Advance / amount paid",
@@ -48,24 +44,32 @@ def load_data():
     ]
 
     for col in money_columns:
+
         if col in df.columns:
+
             df[col] = (
                 df[col]
                 .astype(str)
                 .str.replace(",", "", regex=False)
                 .str.replace("₹", "", regex=False)
                 .str.replace("-", "0", regex=False)
-                .replace("", "0")
             )
-            df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
 
-    # Keep S.No column
+            df[col] = pd.to_numeric(
+                df[col],
+                errors="coerce"
+            ).fillna(0)
+
+    # S.No
     if "S.No" in df.columns:
-        df["S.No"] = pd.to_numeric(df["S.No"], errors="coerce")
-        df = df[df["S.No"].notna()]
-        df["S.No"] = df["S.No"].astype(int)
 
-    # Reset DataFrame index
-    df.reset_index(drop=True, inplace=True)
+        df["S.No"] = (
+            pd.to_numeric(
+                df["S.No"],
+                errors="coerce"
+            )
+            .fillna(0)
+            .astype(int)
+        )
 
     return df
