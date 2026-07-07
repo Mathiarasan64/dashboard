@@ -26,8 +26,8 @@ def load_data():
     df.rename(columns={
         "Students Name": "Student Name",
         "Payment type": "Payment Type",
-        "Payment Status (June)": "Payment Status June",
-        "Payment Status (July)": "Payment Status July"
+        "Payment Status (June": "Payment Status June",
+        "Payment Status (July": "Payment Status July"
     }, inplace=True)
 
     # Remove rows where Student Name is empty
