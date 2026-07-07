@@ -3,29 +3,23 @@ import plotly.express as px
 from streamlit_autorefresh import st_autorefresh
 from data import load_data
 
-# -----------------------------
-# PAGE CONFIG
-# -----------------------------
+# ---------------- PAGE CONFIG ----------------
 st.set_page_config(
     page_title="Revenue Dashboard",
     page_icon="💰",
     layout="wide"
 )
 
-# -----------------------------
-# CUSTOM CSS
-# -----------------------------
+# ---------------- CSS ----------------
 st.markdown("""
 <style>
-
 .stApp{
     background:#F8FAFC;
 }
 
 h1{
-    color:#1E3A8A;
     text-align:center;
-    font-weight:bold;
+    color:#1E3A8A;
 }
 
 [data-testid="stMetric"]{
@@ -35,200 +29,174 @@ h1{
     border:1px solid #E5E7EB;
     box-shadow:0px 3px 10px rgba(0,0,0,.08);
 }
-
 </style>
 """, unsafe_allow_html=True)
 
-# -----------------------------
-# AUTO REFRESH
-# -----------------------------
 st_autorefresh(interval=5000, key="refresh")
 
-# -----------------------------
-# LOAD DATA
-# -----------------------------
+# ---------------- LOAD DATA ----------------
 df = load_data()
 
-# -----------------------------
-# TITLE
-# -----------------------------
+# ---------- NORMALIZE COLUMN NAMES ----------
+df.columns = (
+    df.columns
+    .str.strip()
+    .str.replace("\n", " ", regex=False)
+)
+
+# Show columns once for debugging
+with st.expander("🔍 Column Names (Debug)"):
+    st.write(df.columns.tolist())
+
+# Mapping (edit only if your sheet uses different names)
+COLUMN_MAP = {
+    "Students Name": "Student Name",
+    "Student Name": "Student Name",
+    "Payment type": "Payment Type",
+    "Payment Type": "Payment Type",
+    "Total price": "Total price",
+    "Advance / amount paid": "Advance / amount paid",
+    "Pending": "Pending",
+    "June": "June",
+    "July": "July",
+    "Payment Status (June)": "Payment Status June",
+    "Payment Status (July)": "Payment Status July",
+}
+
+df.rename(columns=COLUMN_MAP, inplace=True)
+
+# Convert numeric columns
+money_columns = [
+    "Total price",
+    "Advance / amount paid",
+    "Pending",
+    "June",
+    "July"
+]
+
+for col in money_columns:
+    if col in df.columns:
+        df[col] = (
+            df[col]
+            .astype(str)
+            .str.replace(",", "", regex=False)
+            .str.replace("₹", "", regex=False)
+            .str.replace("-", "0", regex=False)
+        )
+        df[col] = df[col].replace("", "0")
+        df[col] = df[col].astype(float)
+
+# ---------------- TITLE ----------------
 st.title("💰 Revenue & Collection Dashboard")
 
 st.info("📊 Live Dashboard | Auto Refresh Every 5 Seconds")
 
 st.divider()
 
-# -----------------------------
-# KPI CARDS
-# -----------------------------
+# ---------------- KPI ----------------
 c1, c2, c3, c4 = st.columns(4)
 
 with c1:
-    st.metric(
-        "👨‍🎓 Learners",
-        len(df)
-    )
+    st.metric("👨‍🎓 Learners", len(df))
 
 with c2:
-    st.metric(
-        "💰 Revenue",
-        f"₹ {df['Total price'].sum():,.0f}"
-    )
+    revenue = df["Total price"].sum() if "Total price" in df.columns else 0
+    st.metric("💰 Revenue", f"₹ {revenue:,.0f}")
 
 with c3:
-    st.metric(
-        "✅ Collected",
-        f"₹ {df['Advance / amount paid'].sum():,.0f}"
-    )
+    collected = df["Advance / amount paid"].sum() if "Advance / amount paid" in df.columns else 0
+    st.metric("✅ Collected", f"₹ {collected:,.0f}")
 
 with c4:
-    st.metric(
-        "⚠ Outstanding",
-        f"₹ {df['Pending'].sum():,.0f}"
-    )
+    pending = df["Pending"].sum() if "Pending" in df.columns else 0
+    st.metric("⚠ Outstanding", f"₹ {pending:,.0f}")
 
 st.divider()
 
-# -----------------------------
-# CHARTS
-# -----------------------------
+# ---------------- CHARTS ----------------
 left, right = st.columns(2)
 
 with left:
 
-    st.subheader("📈 Monthly Revenue")
+    if "June" in df.columns and "July" in df.columns:
 
-    monthly = {
-        "Month": ["June", "July"],
-        "Collection": [
-            df["June"].sum(),
-            df["July"].sum()
-        ]
-    }
+        monthly = {
+            "Month": ["June", "July"],
+            "Collection": [
+                df["June"].sum(),
+                df["July"].sum()
+            ]
+        }
 
-    fig1 = px.bar(
-        monthly,
-        x="Month",
-        y="Collection",
-        color="Month",
-        text="Collection"
-    )
-
-    st.plotly_chart(
-        fig1,
-        use_container_width=True
-    )
-
-with right:
-
-    st.subheader("🥧 Payment Type")
-
-    payment = (
-        df["Payment Type"]
-        .value_counts()
-        .reset_index()
-    )
-
-    payment.columns = [
-        "Payment Type",
-        "Count"
-    ]
-
-    fig2 = px.pie(
-        payment,
-        names="Payment Type",
-        values="Count",
-        hole=.45
-    )
-
-    st.plotly_chart(
-        fig2,
-        use_container_width=True
-    )
-
-# -----------------------------
-# PAYMENT STATUS
-# -----------------------------
-left, right = st.columns(2)
-
-with left:
-
-    st.subheader("📊 Payment Status")
-
-    status = (
-        df["Payment Status - June"]
-        .value_counts()
-        .reset_index()
-    )
-
-    status.columns = [
-        "Status",
-        "Students"
-    ]
-
-    fig3 = px.bar(
-        status,
-        x="Status",
-        y="Students",
-        color="Status",
-        text="Students"
-    )
-
-    st.plotly_chart(
-        fig3,
-        use_container_width=True
-    )
-
-with right:
-
-    st.subheader("🏆 Top 10 Highest Fee Learners")
-
-    top = (
-        df.sort_values(
-            "Total price",
-            ascending=False
+        fig = px.bar(
+            monthly,
+            x="Month",
+            y="Collection",
+            color="Month",
+            text="Collection",
+            title="Monthly Collection"
         )
-        .head(10)
-    )
 
-    fig4 = px.bar(
-        top,
-        x="Student Name",
-        y="Total price",
-        color="Total price",
-        text="Total price"
-    )
+        st.plotly_chart(fig, use_container_width=True)
 
-    st.plotly_chart(
-        fig4,
-        use_container_width=True
-    )
+with right:
+
+    if "Payment Type" in df.columns:
+
+        payment = (
+            df["Payment Type"]
+            .value_counts()
+            .reset_index()
+        )
+
+        payment.columns = ["Payment Type", "Count"]
+
+        fig = px.pie(
+            payment,
+            names="Payment Type",
+            values="Count",
+            hole=.45,
+            title="Payment Type Distribution"
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
 
 st.divider()
 
-# -----------------------------
-# STUDENT TABLE
-# -----------------------------
-st.subheader("📋 Student Payment Details")
+# ---------------- SEARCH ----------------
+st.subheader("🔍 Search Student")
 
-search = st.text_input("🔍 Search Student")
+search = st.text_input("Enter Student Name")
 
-if search:
-    filtered = df[
-        df["Student Name"]
-        .str.contains(search, case=False, na=False)
-    ]
+if "Student Name" in df.columns:
+
+    if search:
+
+        filtered = df[
+            df["Student Name"]
+            .str.contains(search, case=False, na=False)
+        ]
+
+    else:
+
+        filtered = df
+
 else:
+
     filtered = df
+
+# ---------------- TABLE ----------------
+st.subheader("📋 Student Details")
 
 st.dataframe(
     filtered,
     use_container_width=True
 )
 
+# ---------------- DOWNLOAD ----------------
 st.download_button(
     "📥 Download CSV",
     filtered.to_csv(index=False),
-    file_name="student_payment_report.csv",
+    file_name="Revenue_Report.csv",
     mime="text/csv"
 )
