@@ -37,8 +37,6 @@ st_autorefresh(interval=5000, key="refresh")
 # ---------------- LOAD DATA ----------------
 df = load_data()
 
-st.write(df.columns.tolist())
-st.stop()
 
 # ---------------- SIDEBAR FILTERS ----------------
 st.sidebar.header("🎛 Dashboard Filters")
