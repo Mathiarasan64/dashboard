@@ -6,21 +6,14 @@ def load_data():
     # Read CSV
     df = pd.read_csv(URL)
 
-    # Remove empty rows
+    # Remove completely empty rows
     df = df.dropna(how="all")
 
-    # Remove the first row if it contains only None values
+    # Remove first row if it contains 'None'
     if len(df) > 0:
         first_row = df.iloc[0].astype(str).str.lower()
         if first_row.str.contains("none").any():
             df = df.iloc[1:]
-
-    # Remove rows where Student Name is empty
-    if "Student Name" in df.columns:
-        df = df[df["Student Name"].notna()]
-
-    # Reset index
-    df.reset_index(drop=True, inplace=True)
 
     # Clean column names
     df.columns = (
@@ -29,7 +22,7 @@ def load_data():
         .str.replace("\n", " ", regex=False)
     )
 
-    # Rename columns to a standard format
+    # Standardize column names
     df.rename(columns={
         "Students Name": "Student Name",
         "Payment type": "Payment Type",
@@ -37,7 +30,12 @@ def load_data():
         "Payment Status (July)": "Payment Status July"
     }, inplace=True)
 
-    # Convert money columns to numeric
+    # Remove rows where Student Name is empty
+    if "Student Name" in df.columns:
+        df = df[df["Student Name"].notna()]
+        df = df[df["Student Name"].astype(str).str.strip() != ""]
+
+    # Convert currency columns
     money_columns = [
         "Total price",
         "Advance / amount paid",
@@ -62,10 +60,11 @@ def load_data():
 
             df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
 
-    # Convert S.No to integer
+    # Remove S.No column completely
     if "S.No" in df.columns:
-        df["S.No"] = pd.to_numeric(df["S.No"], errors="coerce")
-        df = df[df["S.No"].notna()]
-        df["S.No"] = df["S.No"].astype(int)
+        df = df.drop(columns=["S.No"])
+
+    # Reset index
+    df.reset_index(drop=True, inplace=True)
 
     return df
