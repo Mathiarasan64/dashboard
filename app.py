@@ -7,6 +7,32 @@ st.set_page_config(
     page_icon="💰",
     layout="wide"
 )
+st.markdown("""
+<style>
+
+/* Main background */
+.stApp {
+    background-color: #F8FAFC;
+}
+
+/* Dashboard title */
+h1 {
+    color: #1E3A8A;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* KPI card styling */
+[data-testid="stMetric"] {
+    background-color: white;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.08);
+}
+
+</style>
+""", unsafe_allow_html=True)
 
 st_autorefresh(interval=5000, key="refresh")
 
