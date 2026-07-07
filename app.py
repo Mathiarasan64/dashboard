@@ -115,34 +115,74 @@ st.info("📊 Live Dashboard | Auto Refresh Every 5 Seconds")
 st.divider()
 
 # ---------------- KPI ----------------
-c1, c2, c3, c4 = st.columns(4)
+
+# ---------------- KPI CALCULATIONS ----------------
+
+total_learners = len(df)
+
+closed_learners = len(
+    df[df["Learner status"].astype(str).str.strip().str.lower() == "closed"]
+)
+
+active_learners = total_learners - closed_learners
+
+total_sales = df["Total price"].sum()
+
+one_shot_sales = df[
+    df["Payment Type"].astype(str).str.strip().str.lower() == "one shot"
+]["Total price"].sum()
+
+emi_sales = df[
+    df["Payment Type"].astype(str).str.strip().str.lower() == "emi"
+]["Total price"].sum()
+
+closed_sales = df[
+    df["Learner status"].astype(str).str.strip().str.lower() == "closed"
+]["Total price"].sum()
+
+active_sales = total_sales - closed_sales
+
+amount_collected = df["Advance / amount paid"].sum()
+
+pending_amount = df["Pending"].sum()
+
+collection_percentage = (
+    (amount_collected / active_sales) * 100
+    if active_sales > 0 else 0
+)
+c1, c2, c3, c4, c5 = st.columns(5)
 
 with c1:
-    st.metric(
-    label="👨‍🎓 Total Learners",
-    value=f"{len(df):,}"
-)
+    st.metric("👨‍🎓 Total Learners", total_learners)
 
 with c2:
-    revenue = df["Total price"].sum() if "Total price" in df.columns else 0
-    st.metric(
-    label="💰 Total Revenue",
-    value=f"₹ {revenue:,.0f}"
-)
+    st.metric("👥 Active Learners", active_learners)
 
 with c3:
-    collected = df["Advance / amount paid"].sum() if "Advance / amount paid" in df.columns else 0
-    st.metric(
-    label="✅ Amount Collected",
-    value=f"₹ {collected:,.0f}"
-)
+    st.metric("🚫 Closed Learners", closed_learners)
 
 with c4:
-    collection_percentage = (collected / revenue * 100) if revenue else 0
-    st.metric(
-        "📈 Collection %",
-        f"{collection_percentage:.1f}%"
-    )
+    st.metric("💰 Total Sales", f"₹ {total_sales:,.0f}")
+
+with c5:
+    st.metric("🟢 Active Sales", f"₹ {active_sales:,.0f}")
+
+c6, c7, c8, c9, c10 = st.columns(5)
+
+with c6:
+    st.metric("💵 One Shot Sales", f"₹ {one_shot_sales:,.0f}")
+
+with c7:
+    st.metric("💳 EMI Sales", f"₹ {emi_sales:,.0f}")
+
+with c8:
+    st.metric("✅ Amount Collected", f"₹ {amount_collected:,.0f}")
+
+with c9:
+    st.metric("⚠ Pending Amount", f"₹ {pending_amount:,.0f}")
+
+with c10:
+    st.metric("📈 Collection %", f"{collection_percentage:.1f}%")
 
 # ---------------- REVENUE PROGRESS ----------------
 st.subheader("📈 Revenue Collection Progress")
