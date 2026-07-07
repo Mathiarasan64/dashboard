@@ -59,8 +59,6 @@ if "Student Name" in df.columns:
     if student:
         df = df[df["Student Name"].str.contains(student, case=False, na=False)]
 
-# ---------------- SIDEBAR ----------------
-st.sidebar.title("📊 Dashboard Filters")
 
 if "Payment Type" in df.columns:
     payment_type = st.sidebar.multiselect(
@@ -149,7 +147,6 @@ with c3:
 )
 
 with c4:
-    with c4:
     collection_percentage = (collected / revenue * 100) if revenue else 0
     st.metric(
         "📈 Collection %",
