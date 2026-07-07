@@ -149,12 +149,12 @@ with c3:
 )
 
 with c4:
+    with c4:
     collection_percentage = (collected / revenue * 100) if revenue else 0
-
-st.metric(
-    "📈 Collection %",
-    f"{collection_percentage:.1f}%"
-)
+    st.metric(
+        "📈 Collection %",
+        f"{collection_percentage:.1f}%"
+    )
 
 # ---------------- REVENUE PROGRESS ----------------
 st.subheader("📈 Revenue Collection Progress")
@@ -175,13 +175,7 @@ st.divider()
 # ---------------- CHARTS ----------------
 left, right = st.columns(2)
 
-st.divider()
-
-# ---------------- CHARTS ----------------
-left, right = st.columns(2)
-
 with left:
-
     if "June" in df.columns and "July" in df.columns:
 
         monthly = {
@@ -193,21 +187,21 @@ with left:
         }
 
         fig = px.bar(
-    monthly,
-    x="Month",
-    y="Collection",
-    color="Month",
-    text_auto=True,
-    title="Monthly Collection",
-    template="plotly_white"
-)
+            monthly,
+            x="Month",
+            y="Collection",
+            color="Month",
+            text_auto=True,
+            title="Monthly Collection",
+            template="plotly_white"
+        )
 
-fig.update_layout(
-    title_x=0.5,
-    height=450
-)
+        fig.update_layout(
+            title_x=0.5,
+            height=450
+        )
 
-st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True)
 with right:
 
     if "Payment Type" in df.columns:
@@ -234,13 +228,6 @@ st.divider()
 
 # ---------------- SEARCH ----------------
 filtered = df.copy()
-
-    if search:
-    filtered = df[
-        df["Student Name"].str.contains(search)
-    ]
-else:
-    filtered = df
 
 # ---------------- TABLE ----------------
 # ---------------- TABLE ----------------
