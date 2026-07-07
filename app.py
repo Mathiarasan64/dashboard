@@ -188,11 +188,17 @@ else:
 # ---------------- TABLE ----------------
 # ---------------- TABLE ----------------
 # ---------------- TABLE ----------------
+# ---------------- TABLE ----------------
 st.subheader("📋 Student Details")
 
+# Reset dataframe index
+filtered = filtered.reset_index(drop=True)
+
+# Display dataframe without Streamlit index
 st.dataframe(
-    filtered.style.hide(axis="index"),
-    use_container_width=True
+    filtered,
+    use_container_width=True,
+    hide_index=True
 )
 
 # ---------------- DOWNLOAD ----------------
