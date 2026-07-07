@@ -60,15 +60,6 @@ if "Student Name" in df.columns:
         df = df[df["Student Name"].str.contains(student, case=False, na=False)]
 
 
-if "Payment Type" in df.columns:
-    payment_type = st.sidebar.multiselect(
-        "Select Payment Type",
-        options=df["Payment Type"].dropna().unique(),
-        default=df["Payment Type"].dropna().unique()
-    )
-
-    df = df[df["Payment Type"].isin(payment_type)]
-
 # ---------- NORMALIZE COLUMN NAMES ----------
 df.columns = (
     df.columns
@@ -197,8 +188,8 @@ with left:
             title_x=0.5,
             height=450
         )
+st.plotly_chart(fig, use_container_width=True)
 
-        st.plotly_chart(fig, use_container_width=True)
 with right:
 
     if "Payment Type" in df.columns:
@@ -215,8 +206,19 @@ with right:
             payment,
             names="Payment Type",
             values="Count",
-            hole=.45,
-            title="Payment Type Distribution"
+            hole=0.45,
+            title="Payment Type Distribution",
+            template="plotly_white"
+        )
+
+        fig.update_traces(
+            textposition="inside",
+            textinfo="percent+label"
+        )
+
+        fig.update_layout(
+            title_x=0.5,
+            height=450
         )
 
         st.plotly_chart(fig, use_container_width=True)
