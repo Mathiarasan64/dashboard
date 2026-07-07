@@ -235,12 +235,11 @@ st.divider()
 # ---------------- SEARCH ----------------
 filtered = df.copy()
 
-    else:
-
-        filtered = df
-
+    if search:
+    filtered = df[
+        df["Student Name"].str.contains(search)
+    ]
 else:
-
     filtered = df
 
 # ---------------- TABLE ----------------
