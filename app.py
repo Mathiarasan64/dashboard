@@ -84,7 +84,7 @@ COLUMN_MAP = {
     "June": "June",
     "July": "July",
     "Payment Status (June)": "Payment Status June",
-    "Payment Status (July)": "Payment Status July",
+    "Payment Status July": "Payment Status July",
 }
 
 df.rename(columns=COLUMN_MAP, inplace=True)
@@ -118,6 +118,8 @@ st.info("📊 Live Dashboard | Auto Refresh Every 5 Seconds")
 st.divider()
 
 # ---------------- KPI ----------------
+
+# ---------------- KPI CALCULATIONS ----------------
 
 # ---------------- KPI CALCULATIONS ----------------
 
@@ -190,17 +192,22 @@ with c10:
 # ---------------- REVENUE PROGRESS ----------------
 st.subheader("📈 Revenue Collection Progress")
 
-if total_sales > 0:
-    progress = min(amount_collected / total_sales, 1.0)
+# ---------------- REVENUE PROGRESS ----------------
+
+st.subheader("📈 Revenue Collection Progress")
+
+if active_sales > 0:
+    progress = amount_collected / active_sales
 else:
-    progress = 0.0
+    progress = 0
+
+progress = min(progress, 1.0)
 
 st.progress(progress)
 
 st.write(
-    f"Collected: ₹{amount_collected:,.0f} / ₹{total_sales:,.0f} ({progress*100:.1f}%)"
+    f"Collected ₹{amount_collected:,.0f} / ₹{active_sales:,.0f} ({progress*100:.1f}%)"
 )
-
 st.divider()
 
 # ---------------- CHARTS ----------------
