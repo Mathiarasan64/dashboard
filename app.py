@@ -1,47 +1,45 @@
 import streamlit as st
-import pandas as pd
-import plotly.express as px
-
-from data import load_data
 from streamlit_autorefresh import st_autorefresh
+from data import load_data
 
 st.set_page_config(
-    page_title="Student Dashboard",
+    page_title="Revenue Dashboard",
+    page_icon="💰",
     layout="wide"
 )
 
 st_autorefresh(interval=5000, key="refresh")
 
-st.title("🎓 Student Performance Dashboard")
-
 df = load_data()
 
-if "Error" in df.columns:
-    st.error(df.iloc[0]["Error"])
-    st.stop()
+st.title("💰 Revenue & Collection Dashboard")
 
-st.success("Live data loaded successfully!")
+col1, col2, col3, col4 = st.columns(4)
 
-st.dataframe(df)
-
-numeric_columns = df.select_dtypes(include="number").columns.tolist()
-
-if numeric_columns:
-
-    column = st.selectbox(
-        "Select Numeric Column",
-        numeric_columns
+with col1:
+    st.metric(
+        "Learners",
+        len(df)
     )
 
-    col1, col2 = st.columns(2)
+with col2:
+    st.metric(
+        "Revenue",
+        f"₹ {df['Total price'].sum():,.0f}"
+    )
 
-    with col1:
-        fig = px.histogram(df, x=column)
-        st.plotly_chart(fig, use_container_width=True)
+with col3:
+    st.metric(
+        "Collected",
+        f"₹ {df['Advance / amount paid'].sum():,.0f}"
+    )
 
-    with col2:
-        fig2 = px.box(df, y=column)
-        st.plotly_chart(fig2, use_container_width=True)
+with col4:
+    st.metric(
+        "Outstanding",
+        f"₹ {df['Pending'].sum():,.0f}"
+    )
 
-else:
-    st.warning("No numeric columns found.")
+st.divider()
+
+st.dataframe(df, use_container_width=True)
