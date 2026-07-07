@@ -117,10 +117,6 @@ st.divider()
 
 # ---------------- KPI ----------------
 
-# ---------------- KPI CALCULATIONS ----------------
-
-# ---------------- KPI CALCULATIONS ----------------
-
 total_learners = len(df)
 
 closed_learners = len(
@@ -136,7 +132,7 @@ one_shot_sales = df[
 ]["Total price"].sum()
 
 emi_sales = df[
-    df["Payment Type"].astype(str).str.strip().str.lower() == "emi"
+    df["Payment Type"].astype(str).str.strip().str.lower() != "one shot"
 ]["Total price"].sum()
 
 closed_sales = df[
@@ -187,10 +183,6 @@ with c9:
 with c10:
     st.metric("📈 Collection %", f"{collection_percentage:.1f}%")
 
-# ---------------- REVENUE PROGRESS ----------------
-st.subheader("📈 Revenue Collection Progress")
-
-# ---------------- REVENUE PROGRESS ----------------
 
 st.subheader("📈 Revenue Collection Progress")
 
@@ -236,7 +228,8 @@ with left:
             title_x=0.5,
             height=450
         )
-st.plotly_chart(fig, use_container_width=True)
+
+        st.plotly_chart(fig, use_container_width=True)
 
 with right:
 
@@ -277,9 +270,7 @@ st.divider()
 filtered = df.copy()
 
 # ---------------- TABLE ----------------
-# ---------------- TABLE ----------------
-# ---------------- TABLE ----------------
-# ---------------- TABLE ----------------
+
 st.subheader("📋 Student Details")
 
 # Reset dataframe index
