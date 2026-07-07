@@ -207,8 +207,7 @@ fig.update_layout(
     height=450
 )
 
-        st.plotly_chart(fig, use_container_width=True)
-
+st.plotly_chart(fig, use_container_width=True)
 with right:
 
     if "Payment Type" in df.columns:
