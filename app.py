@@ -37,6 +37,28 @@ st_autorefresh(interval=5000, key="refresh")
 # ---------------- LOAD DATA ----------------
 df = load_data()
 
+# ---------------- SIDEBAR FILTERS ----------------
+st.sidebar.header("🎛 Dashboard Filters")
+
+# Payment Type Filter
+if "Payment Type" in df.columns:
+    payment_types = sorted(df["Payment Type"].dropna().unique())
+
+    selected_payment = st.sidebar.multiselect(
+        "Payment Type",
+        payment_types,
+        default=payment_types
+    )
+
+    df = df[df["Payment Type"].isin(selected_payment)]
+
+# Search Student
+if "Student Name" in df.columns:
+    student = st.sidebar.text_input("🔍 Search Student")
+
+    if student:
+        df = df[df["Student Name"].str.contains(student, case=False, na=False)]
+
 # ---------------- SIDEBAR ----------------
 st.sidebar.title("📊 Dashboard Filters")
 
@@ -127,8 +149,12 @@ with c3:
 )
 
 with c4:
-    pending = df["Pending"].sum() if "Pending" in df.columns else 0
-    st.metric("⚠ Pending Amount", f"₹ {pending:,.0f}")
+    collection_percentage = (collected / revenue * 100) if revenue else 0
+
+st.metric(
+    "📈 Collection %",
+    f"{collection_percentage:.1f}%"
+)
 
 # ---------------- REVENUE PROGRESS ----------------
 st.subheader("📈 Revenue Collection Progress")
@@ -167,13 +193,19 @@ with left:
         }
 
         fig = px.bar(
-            monthly,
-            x="Month",
-            y="Collection",
-            color="Month",
-            text="Collection",
-            title="Monthly Collection"
-        )
+    monthly,
+    x="Month",
+    y="Collection",
+    color="Month",
+    text_auto=True,
+    title="Monthly Collection",
+    template="plotly_white"
+)
+
+fig.update_layout(
+    title_x=0.5,
+    height=450
+)
 
         st.plotly_chart(fig, use_container_width=True)
 
@@ -202,18 +234,7 @@ with right:
 st.divider()
 
 # ---------------- SEARCH ----------------
-st.subheader("🔍 Search Student")
-
-search = st.text_input("Enter Student Name")
-
-if "Student Name" in df.columns:
-
-    if search:
-
-        filtered = df[
-            df["Student Name"]
-            .str.contains(search, case=False, na=False)
-        ]
+filtered = df.copy()
 
     else:
 
