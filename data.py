@@ -22,7 +22,7 @@ def load_data():
         .str.replace("\n", " ", regex=False)
     )
 
-    # Standardize column names
+    # Rename columns
     df.rename(columns={
         "Students Name": "Student Name",
         "Payment type": "Payment Type",
@@ -57,14 +57,15 @@ def load_data():
                 .str.replace("-", "0", regex=False)
                 .replace("", "0")
             )
-
             df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
 
-    # Remove S.No column completely
+    # Keep S.No column
     if "S.No" in df.columns:
-        df = df.drop(columns=["S.No"])
+        df["S.No"] = pd.to_numeric(df["S.No"], errors="coerce")
+        df = df[df["S.No"].notna()]
+        df["S.No"] = df["S.No"].astype(int)
 
-    # Reset index
+    # Reset DataFrame index
     df.reset_index(drop=True, inplace=True)
 
     return df
