@@ -124,7 +124,7 @@ st.divider()
 total_learners = len(df)
 
 closed_learners = len(
-    df[df["Learner status"].astype(str).str.strip().str.lower() == "closed"]
+    df[df["Learner Status"].astype(str).str.strip().str.lower() == "closed"]
 )
 
 active_learners = total_learners - closed_learners
@@ -140,7 +140,7 @@ emi_sales = df[
 ]["Total price"].sum()
 
 closed_sales = df[
-    df["Learner status"].astype(str).str.strip().str.lower() == "closed"
+    df["Learner Status"].astype(str).str.strip().str.lower() == "closed"
 ]["Total price"].sum()
 
 active_sales = total_sales - closed_sales
@@ -190,15 +190,15 @@ with c10:
 # ---------------- REVENUE PROGRESS ----------------
 st.subheader("📈 Revenue Collection Progress")
 
-if revenue > 0:
-    progress = min(collected / revenue, 1.0)
+if total_sales > 0:
+    progress = min(amount_collected / total_sales, 1.0)
 else:
     progress = 0.0
 
 st.progress(progress)
 
 st.write(
-    f"Collected: ₹{collected:,.0f} / ₹{revenue:,.0f} ({progress*100:.1f}%)"
+    f"Collected: ₹{amount_collected:,.0f} / ₹{total_sales:,.0f} ({progress*100:.1f}%)"
 )
 
 st.divider()
