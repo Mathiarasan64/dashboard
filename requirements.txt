@@ -2,5 +2,6 @@ streamlit
 pandas
 plotly
 requests
+openpyxl
 lxml
 streamlit-autorefresh
