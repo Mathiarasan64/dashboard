@@ -37,6 +37,18 @@ st_autorefresh(interval=5000, key="refresh")
 # ---------------- LOAD DATA ----------------
 df = load_data()
 
+# ---------------- SIDEBAR ----------------
+st.sidebar.title("📊 Dashboard Filters")
+
+if "Payment Type" in df.columns:
+    payment_type = st.sidebar.multiselect(
+        "Select Payment Type",
+        options=df["Payment Type"].dropna().unique(),
+        default=df["Payment Type"].dropna().unique()
+    )
+
+    df = df[df["Payment Type"].isin(payment_type)]
+
 # ---------- NORMALIZE COLUMN NAMES ----------
 df.columns = (
     df.columns
@@ -44,9 +56,7 @@ df.columns = (
     .str.replace("\n", " ", regex=False)
 )
 
-# Show columns once for debugging
-with st.expander("🔍 Column Names (Debug)"):
-    st.write(df.columns.tolist())
+
 
 # Mapping (edit only if your sheet uses different names)
 COLUMN_MAP = {
@@ -97,19 +107,47 @@ st.divider()
 c1, c2, c3, c4 = st.columns(4)
 
 with c1:
-    st.metric("👨‍🎓 Learners", len(df))
+    st.metric(
+    label="👨‍🎓 Total Learners",
+    value=f"{len(df):,}"
+)
 
 with c2:
     revenue = df["Total price"].sum() if "Total price" in df.columns else 0
-    st.metric("💰 Revenue", f"₹ {revenue:,.0f}")
+    st.metric(
+    label="💰 Total Revenue",
+    value=f"₹ {revenue:,.0f}"
+)
 
 with c3:
     collected = df["Advance / amount paid"].sum() if "Advance / amount paid" in df.columns else 0
-    st.metric("✅ Collected", f"₹ {collected:,.0f}")
+    st.metric(
+    label="✅ Amount Collected",
+    value=f"₹ {collected:,.0f}"
+)
 
 with c4:
     pending = df["Pending"].sum() if "Pending" in df.columns else 0
-    st.metric("⚠ Outstanding", f"₹ {pending:,.0f}")
+    st.metric("⚠ Pending Amount", f"₹ {pending:,.0f}")
+
+# ---------------- REVENUE PROGRESS ----------------
+st.subheader("📈 Revenue Collection Progress")
+
+if revenue > 0:
+    progress = min(collected / revenue, 1.0)
+else:
+    progress = 0.0
+
+st.progress(progress)
+
+st.write(
+    f"Collected: ₹{collected:,.0f} / ₹{revenue:,.0f} ({progress*100:.1f}%)"
+)
+
+st.divider()
+
+# ---------------- CHARTS ----------------
+left, right = st.columns(2)
 
 st.divider()
 
