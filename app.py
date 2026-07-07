@@ -186,10 +186,12 @@ else:
     filtered = df
 
 # ---------------- TABLE ----------------
+# ---------------- TABLE ----------------
+# ---------------- TABLE ----------------
 st.subheader("📋 Student Details")
 
 st.dataframe(
-    filtered,
+    filtered.style.hide(axis="index"),
     use_container_width=True
 )
 
