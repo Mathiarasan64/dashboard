@@ -3,9 +3,24 @@ import streamlit as st
 from streamlit_autorefresh import st_autorefresh
 from data import load_data
 from metrics import calculate_metrics
-from charts import monthly_collection_chart,payment_type_chart,active_closed_chart,collection_pending_chart,top_pending_students
 
-st.set_page_config(page_title="Revenue Dashboard",page_icon="💰",layout="wide")
+from charts import (
+    monthly_collection_chart,
+    payment_type_chart,
+    active_closed_chart,
+    collection_pending_chart,
+    top_pending_students
+)
+
+from styles import load_css
+
+st.set_page_config(
+  page_title="Revenue Dashboard",
+  page_icon="💰",
+  layout="wide"
+)
+st.markdown(load_css(), unsafe_allow_html=True)
+
 st_autorefresh(interval=5000,key="refresh")
 df=load_data()
 metrics=calculate_metrics(df)
