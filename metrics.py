@@ -79,6 +79,7 @@ def calculate_metrics(df):
             == "exited"
         ]
     )
+print(df.columns.tolist())
 
     july_exited = len(
         df[
