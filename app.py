@@ -39,3 +39,9 @@ st_autorefresh(interval=5000, key="refresh")
 df = load_data()
 
 metrics = calculate_metrics(df)
+
+st.title("💰 Revenue Dashboard")
+
+st.write("Dashboard Loaded Successfully")
+
+st.write(df.head())
