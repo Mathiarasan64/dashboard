@@ -56,9 +56,9 @@ def calculate_metrics(df):
     june_exited = 0
     july_exited = 0
 
-    if "Payment Status (June)" in df.columns:
+    if "Payment Status June" in df.columns:
         june_exited = (
-            df["Payment Status (June)"]
+            df["Payment Status June"]
             .astype(str)
             .str.strip()
             .str.lower()
@@ -75,7 +75,6 @@ def calculate_metrics(df):
             .eq("exited")
             .sum()
         )
-
     # ---------------- Collection Percentage ----------------
 
     if active_sales > 0:
