@@ -1,5 +1,4 @@
 import streamlit as st
-import plotly.express as px
 from streamlit_autorefresh import st_autorefresh
 from data import load_data
 from metrics import calculate_metrics
