@@ -2,6 +2,15 @@ import streamlit as st
 import plotly.express as px
 from streamlit_autorefresh import st_autorefresh
 from data import load_data
+from metrics import calculate_metrics
+
+from charts import (
+    monthly_collection_chart,
+    payment_type_chart,
+    active_closed_chart,
+    collection_pending_chart,
+    top_pending_students
+)
 
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(
