@@ -71,22 +71,26 @@ def calculate_metrics(df):
 
     # ---------------- Exited ----------------
 
+june_exited = 0
+july_exited = 0
+
+if "Payment Status June" in df.columns:
     june_exited = len(
         df[
             df["Payment Status June"]
             .astype(str)
-            .str.lower()
-            == "exited"
+            .str.strip()
+            .str.lower() == "exited"
         ]
     )
-print(df.columns.tolist())
 
+if "Payment Status July" in df.columns:
     july_exited = len(
         df[
             df["Payment Status July"]
             .astype(str)
-            .str.lower()
-            == "exited"
+            .str.strip()
+            .str.lower() == "exited"
         ]
     )
 
