@@ -45,6 +45,8 @@ st_autorefresh(interval=5000, key="refresh")
 # ---------------- LOAD DATA ----------------
 df = load_data()
 
+metrics = calculate_metrics(df)
+
 
 # ---------------- SIDEBAR FILTERS ----------------
 st.sidebar.header("🎛 Dashboard Filters")
