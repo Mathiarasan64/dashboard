@@ -1,11 +1,22 @@
 import pandas as pd
+import requests
+from io import StringIO
 
 URL = "https://sheet.zohopublic.in/sheet/published/sfoej993e5907c3fb4e70a21047d22db57a9c?download=csv&sheetname=Sheet1"
 
 
 def load_data():
 
-    df = pd.read_csv(URL)
+    response = requests.get(
+        URL,
+        headers={
+            "Cache-Control": "no-cache"
+        }
+    )
+
+    df = pd.read_csv(
+        StringIO(response.text)
+    )
 
     # Remove empty rows
     df = df.dropna(how="all")
@@ -18,12 +29,15 @@ def load_data():
     )
 
     # Standardize column names
-    df.rename(columns={
-        "Students Name": "Student Name",
-        "Payment type": "Payment Type",
-        "Payment Status (June)": "Payment Status June",
-        "Payment Status (July)": "Payment Status July",
-    }, inplace=True)
+    df.rename(
+        columns={
+            "Students Name": "Student Name",
+            "Payment type": "Payment Type",
+            "Payment Status (June)": "Payment Status June",
+            "Payment Status (July)": "Payment Status July",
+        },
+        inplace=True
+    )
 
     # Remove rows with empty student names
     if "Student Name" in df.columns:
