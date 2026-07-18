@@ -4,28 +4,16 @@ import pandas as pd
 
 def show_learner_profile(learner):
 
-    # Payment columns (automatically detects new months)
-    exclude_columns = {
-        "Student Name",
-        "Email",
-        "Phone No",
-        "Payment Type",
-        "Learner Status",
-        "Total price",
-        "Pending",
-        "Emi Tenure",
-        "Total Payable Fee",
+    months = {
+        "January", "February", "March", "April", "May",
+        "June", "July", "August", "September",
+        "October", "November", "December"
     }
 
-    months = {
-    "January", "February", "March", "April", "May",
-    "June", "July", "August", "September",
-    "October", "November", "December"
-}
     payment_columns = [
-    col for col in learner.index
-    if col == "Advance" or col in months
-]
+        col for col in learner.index
+        if col == "Advance" or col in months
+    ]
 
     total_collected = 0
 
@@ -42,53 +30,29 @@ def show_learner_profile(learner):
         if course_fee > 0 else 0
     )
 
-    
     st.markdown("## 👤 Learner Profile")
 
     col1, col2 = st.columns([1, 2])
 
     with col1:
-        st.metric(
-            "💰 Course Fee",
-            f"₹{course_fee:,.0f}"
-        )
-
-        st.metric(
-            "✅ Amount Collected",
-            f"₹{total_collected:,.0f}"
-        )
-
-        st.metric(
-            "💳 Outstanding",
-            f"₹{outstanding:,.0f}"
-        )
-
-        st.metric(
-            "📊 Collection %",
-            f"{collection_percent:.1f}%"
-        )
+        st.metric("💰 Course Fee", f"₹{course_fee:,.0f}")
+        st.metric("✅ Amount Collected", f"₹{total_collected:,.0f}")
+        st.metric("💳 Outstanding", f"₹{outstanding:,.0f}")
+        st.metric("📊 Collection %", f"{collection_percent:.1f}%")
 
     with col2:
-
         st.write(f"### {learner['Student Name']}")
-
         st.write(f"📧 **Email:** {learner['Email']}")
-
         st.write(f"📞 **Phone:** {learner['Phone No']}")
-
         st.write(f"💳 **Payment Type:** {learner['Payment Type']}")
-
         st.write(f"📅 **EMI Tenure:** {learner['Emi Tenure']}")
-
         st.write(f"🟢 **Status:** {learner['Learner Status']}")
 
+    payment_type = str(learner["Payment Type"]).strip().lower()
+
+    if payment_type != "one shot":
+
         st.divider()
-
-        payment_type = str(learner["Payment Type"]).strip().lower()
-
-       # Show payment timeline only for EMI learners
-       if payment_type != "one shot":
-
         st.subheader("📅 Payment Timeline")
 
         timeline_data = []
