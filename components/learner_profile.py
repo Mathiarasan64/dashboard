@@ -50,7 +50,7 @@ def show_learner_profile(learner):
 
     payment_type = str(learner["Payment Type"]).strip().lower()
 
-    if payment_type != "one shot":
+    if payment_type != "One-shot":
 
         st.divider()
         st.subheader("📅 Payment Timeline")
