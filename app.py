@@ -457,7 +457,7 @@ summary_df = filtered_dashboard_df.copy()
 
 if month_filter != "All":
     summary_df = summary_df[
-        summary_df["Enrolled In"] == month_filter
+        summary_df["Enrolled Month"] == month_filter
     ]
 
 # Metrics
