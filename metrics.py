@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-def calculate_metrics(df):
+def calculate_metrics(df, month_filter):
 
     # ==========================
     # LEARNER STATUS
@@ -18,9 +18,9 @@ def calculate_metrics(df):
     # LEARNER GROUPS
     # ==========================================
 
-    # Revenue calculations (Active + In-Active)
+    # Revenue calculations (Active + InActive)
     active_df = df[
-        learner_status.isin(["active", "in-active"])
+        learner_status.isin(["active", "inactive"])
     ].copy()
 
     # Only Active learners (for KPI)
@@ -28,9 +28,9 @@ def calculate_metrics(df):
         learner_status == "active"
     ].copy()
 
-    # In-Active learners
+    # InActive learners
     inactive_df = df[
-        learner_status == "in-active"
+        learner_status == "inactive"
     ].copy()
 
     # Closed learners
@@ -104,6 +104,21 @@ def calculate_metrics(df):
         credit_card_revenue
     )
 
+    print("\n========== MANUAL EMI LEARNERS ==========\n")
+
+    print(
+     manual_emi_df[
+        [
+            "Student Name",
+            "Learner Status",
+            "Payment Type",
+            "Total price"
+        ]
+    ].sort_values("Total price", ascending=False)
+)
+
+    print("\nManual EMI Revenue:", manual_emi_revenue)
+
     one_shot_revenue = one_shot_df["Total price"].sum()
 
     # Learner Count
@@ -127,14 +142,14 @@ def calculate_metrics(df):
     payable_fee = active_df["Total Payable Fee"].sum()
 
     # Advance Amount
-    # (Include Active + In-Active + Closed learners)
+    # (Include Active + InActive + Closed learners)
     advance_amount = pd.to_numeric(
-        df["Advance / amount paid"],
+        df["Advance"],
         errors="coerce"
     ).fillna(0).sum()
 
     # Monthly Collection
-    # (Include only Active + In-Active learners)
+    # (Include only Active + InActive learners)
     monthly_columns = [
         "June",
         "July",
@@ -182,20 +197,70 @@ def calculate_metrics(df):
     else:
         collection_percentage = 0
 
-    # ==========================
-    # MONTHLY COLLECTION
-    # ==========================
+    
 
-    june_collection = active_df["June"].sum()
-    july_collection = active_df["July"].sum()
+    # Current Collection
+    months = [
+    "June", "July", "August", "September",
+    "October", "November", "December",
+    "January", "February", "March",
+    "April", "May"
+]
 
-    expected_june = active_df[
-        "Expected EMI Collection for June"
-    ].sum()
+    current_collection = 0
+    expected_collection = 0
 
-    expected_july = active_df[
-        "Expected EMI Collection for July"
-    ].sum()
+    if month_filter == "All":
+
+     for month in months:
+
+        if month in active_df.columns:
+            current_collection += pd.to_numeric(
+                active_df[month],
+                errors="coerce"
+            ).fillna(0).sum()
+
+        expected_col = f"Expected EMI Collection for {month}"
+
+        if expected_col in active_df.columns:
+            expected_collection += pd.to_numeric(
+                active_df[expected_col],
+                errors="coerce"
+            ).fillna(0).sum()
+
+    else:
+
+       if month_filter in active_df.columns:
+        current_collection = pd.to_numeric(
+            active_df[month_filter],
+            errors="coerce"
+        ).fillna(0).sum()
+
+    expected_col = f"Expected EMI Collection for {month_filter}"
+
+    if expected_col in active_df.columns:
+        expected_collection = pd.to_numeric(
+            active_df[expected_col],
+            errors="coerce"
+        ).fillna(0).sum()
+
+    # Backward-compatible monthly metrics
+    june_collection = 0
+    july_collection = 0
+    expected_june = 0
+    expected_july = 0
+
+    if "June" in active_df.columns:
+        june_collection = pd.to_numeric(active_df["June"], errors="coerce").fillna(0).sum()
+
+    if "July" in active_df.columns:
+        july_collection = pd.to_numeric(active_df["July"], errors="coerce").fillna(0).sum()
+
+    if "Expected EMI Collection for June" in active_df.columns:
+        expected_june = pd.to_numeric(active_df["Expected EMI Collection for June"], errors="coerce").fillna(0).sum()
+
+    if "Expected EMI Collection for July" in active_df.columns:
+        expected_july = pd.to_numeric(active_df["Expected EMI Collection for July"], errors="coerce").fillna(0).sum()
 
     # ==========================
     # EXITED
@@ -301,7 +366,7 @@ def calculate_metrics(df):
 
     zero_collection_count = len(
         active_df[
-            active_df["Advance / amount paid"] == 0
+            active_df["Advance"] == 0
         ]
     )
 
@@ -355,6 +420,9 @@ def calculate_metrics(df):
         "july_collection": july_collection,
         "expected_june": expected_june,
         "expected_july": expected_july,
+        "current_collection": current_collection,
+        "expected_collection": expected_collection,
+        
 
         # Exited
         "june_exited": june_exited,

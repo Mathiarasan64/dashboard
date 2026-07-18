@@ -48,7 +48,7 @@ def load_data():
     # Currency Columns
     money_columns = [
         "Total price",
-        "Advance / amount paid",
+        "Advance",
         "Pending",
         "June",
         "July",

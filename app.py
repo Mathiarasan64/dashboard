@@ -5,6 +5,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from components.kpi_cards import kpi_card
+from components.learner_profile import show_learner_profile
 
 from data import load_data
 from metrics import calculate_metrics
@@ -417,14 +418,7 @@ if status_filter != "All":
         filtered_dashboard_df["Learner Status"] == status_filter
     ]
 
-# Month
-if month_filter != "All":
 
-    if month_filter in filtered_dashboard_df.columns:
-
-        filtered_dashboard_df = filtered_dashboard_df[
-            filtered_dashboard_df[month_filter] > 0
-        ]
 
 # Search
 if search_text:
@@ -435,27 +429,46 @@ if search_text:
     )
 
 # Metrics
-metrics = calculate_metrics(filtered_dashboard_df)
+metrics = calculate_metrics(filtered_dashboard_df, month_filter)
 
-st.markdown("""
-<div style="
-background:linear-gradient(90deg,#2563EB,#1D4ED8);
-padding:20px;
-border-radius:15px;
-color:white;
-margin-bottom:20px;
-">
+# ==========================================
+# LEARNER PROFILE MODE
+# ==========================================
 
-<h2 style="margin:0;">
-📊 Executive Dashboard
-</h2>
+if learner_filter != "All Learners":
 
-<p style="margin-top:8px;font-size:16px;">
-Monitor Revenue, Collections and Learner Performance in Real Time
-</p>
+    if not filtered_dashboard_df.empty:
 
-</div>
-""", unsafe_allow_html=True)
+        learner = filtered_dashboard_df.iloc[0]
+
+        show_learner_profile(learner)
+
+        st.stop()
+
+# Dashboard Mode
+is_executive_mode = learner_filter == "All Learners"
+
+if is_executive_mode:
+    st.markdown("""
+    <div style="
+    background:linear-gradient(90deg,#2563EB,#1D4ED8);
+    padding:20px;
+    border-radius:15px;
+    color:white;
+    margin-bottom:20px;
+    ">
+
+    <h2 style="margin:0;">
+    📊 Executive Dashboard
+    </h2>
+
+    <p style="margin-top:8px;font-size:16px;">
+    Monitor Revenue, Collections and Learner Performance in Real Time
+    </p>
+
+    </div>
+    """, unsafe_allow_html=True)
+
 
 # ==========================================
 # EXECUTIVE SUMMARY
@@ -494,7 +507,7 @@ with row1[1]:
     st.metric(
     label="🟢 Active Learners",
     value=metrics["active_learners"],
-    delta=f"{metrics['inactive_learners']} In-Active"
+    delta=f"{metrics['inactive_learners']} InActive"
 )
 
 with row1[2]:
@@ -525,13 +538,8 @@ with row2[1]:
         f"{metrics['collection_percentage']:.1f}%"
     )
 
-with row2[2]:
-    st.metric(
-        "💳 EMI Revenue",
-        format_currency(metrics["emi_revenue"])
-    )
 
-with row2[3]:
+with row2[2]:
     st.metric(
         "💵 One Shot Revenue",
         format_currency(metrics["one_shot_revenue"])
@@ -565,9 +573,17 @@ with finance1:
     )
 
 with finance2:
+
+    title = (
+        "📅 All EMI Collection"
+        if month_filter == "All"
+        else f"📅 {month_filter} EMI Collection"
+    )
+
     st.metric(
-        "📅 Expected EMI Collection",
-        format_currency(metrics["expected_july"])
+        title,
+        format_currency(metrics["expected_collection"]),
+        delta=f"Collected: {format_currency(metrics['current_collection'])}"
     )
 
 with finance3:
