@@ -84,14 +84,14 @@ def show_learner_profile(learner):
 
         st.divider()
 
-    payment_type = str(learner["Payment Type"]).strip().lower()
+       payment_type = str(learner["Payment Type"]).strip().lower()
 
 # Show payment timeline only for EMI learners
-if payment_type != "one shot":
+      if payment_type != "one shot":
 
-    st.subheader("📅 Payment Timeline")
+        st.subheader("📅 Payment Timeline")
 
-    timeline_data = []
+        timeline_data = []
 
     for month in payment_columns:
 
