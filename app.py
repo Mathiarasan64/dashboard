@@ -541,7 +541,7 @@ with row2[1]:
 
 with row2[2]:
     st.metric(
-        "💵 One Shot Revenue",
+        "💵 One-shot Revenue",
         format_currency(metrics["one_shot_revenue"])
     )
 
