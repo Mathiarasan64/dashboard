@@ -144,7 +144,7 @@ def calculate_metrics(df, month_filter):
     # Advance Amount
     # (Include Active + InActive + Closed learners)
     advance_amount = pd.to_numeric(
-        df["Advance"],
+        active_df["Advance"],
         errors="coerce"
     ).fillna(0).sum()
 
