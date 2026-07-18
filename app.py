@@ -71,6 +71,7 @@ defaults = {
     "learner_filter": "All Learners",
     "payment_filter": "All",
     "status_filter": "All",
+    "course_filter": "All",
     "month_filter": "All",
     "search_filter": ""
 }
@@ -254,6 +255,10 @@ status_options = ["All"] + sorted(
     master_df["Learner Status"].dropna().unique().tolist()
 )
 
+course_options = ["All"] + sorted(
+    master_df["Course Name"].dropna().unique().tolist()
+)
+
 month_options = [
     "All",
     "June",
@@ -292,8 +297,8 @@ color:#0F172A;">
 </h2>
 """, unsafe_allow_html=True)
 
-col1, col2, col3, col4, col5, col6 = st.columns(
-    [2.8, 1.8, 1.8, 1.6, 2.2, 0.8],
+col1, col2, col3, col4, col5, col6, col7 = st.columns(
+    [2.5, 1.5, 1.5, 2.0, 1.3, 2.0, 0.8],
     vertical_alignment="bottom"
 )
 
@@ -312,9 +317,11 @@ if learner_filter != "All Learners":
     row = df[df["Student Name"] == learner_filter]
 
     if not row.empty:
+    
 
         st.session_state.payment_filter = row.iloc[0]["Payment Type"]
         st.session_state.status_filter = row.iloc[0]["Learner Status"]
+        st.session_state.course_filter = row.iloc[0]["Course Name"]
 
 # Payment
 with col2:
@@ -333,9 +340,16 @@ with col3:
         status_options,
         key="status_filter"
     )
+with col4:
+
+    course_filter = st.selectbox(
+        "📚 Course",
+        course_options,
+        key="course_filter"
+    )
 
 # Month
-with col4:
+with col5:
 
     month_filter = st.selectbox(
         "📅 Month",
@@ -344,7 +358,7 @@ with col4:
     )
 
 # Search
-with col5:
+with col6:
 
     search_text = st.text_input(
         "🔍 Search",
@@ -353,7 +367,7 @@ with col5:
     )
 
 # Reset
-with col6:
+with col7:
 
     st.markdown("<br>", unsafe_allow_html=True)
 
@@ -387,6 +401,7 @@ div[data-baseweb="select"] > div{
         "🔄",
         use_container_width=True
     ):
+        "course_filter",
         reset_filters()
         st.rerun()
     
@@ -416,6 +431,12 @@ if status_filter != "All":
 
     filtered_dashboard_df = filtered_dashboard_df[
         filtered_dashboard_df["Learner Status"] == status_filter
+    ]
+
+if course_filter != "All":
+
+    filtered_dashboard_df = filtered_dashboard_df[
+        filtered_dashboard_df["Course Name"] == course_filter
     ]
 
 
