@@ -84,6 +84,11 @@ def show_learner_profile(learner):
 
         st.divider()
 
+    payment_type = str(learner["Payment Type"]).strip().lower()
+
+# Show payment timeline only for EMI learners
+if payment_type != "one shot":
+
     st.subheader("📅 Payment Timeline")
 
     timeline_data = []
@@ -102,10 +107,6 @@ def show_learner_profile(learner):
         if month != "Advance":
             link_col = f"Payment Link ({month})"
 
-
-
-
-
             if link_col in learner.index:
                 payment_link = learner[link_col]
 
@@ -119,14 +120,14 @@ def show_learner_profile(learner):
     timeline_df = pd.DataFrame(timeline_data)
 
     st.data_editor(
-    timeline_df,
-    hide_index=True,
-    use_container_width=True,
-    disabled=True,
-    column_config={
-        "Payment Link": st.column_config.LinkColumn(
-            "Payment Link",
-            display_text="Open"
-        )
-    }
-)
+        timeline_df,
+        hide_index=True,
+        use_container_width=True,
+        disabled=True,
+        column_config={
+            "Payment Link": st.column_config.LinkColumn(
+                "Payment Link",
+                display_text="Open"
+            )
+        }
+    )
