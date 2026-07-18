@@ -73,6 +73,7 @@ defaults = {
     "status_filter": "All",
     "course_filter": "All",
     "month_filter": "All",
+    "collection_month_filter": "All",
     "search_filter": ""
 }
 
@@ -86,6 +87,7 @@ def reset_filters():
         "payment_filter",
         "status_filter",
         "month_filter",
+        "collection_month_filter",
         "search_filter",
     ]:
         if key in st.session_state:
@@ -297,8 +299,8 @@ color:#0F172A;">
 </h2>
 """, unsafe_allow_html=True)
 
-col1, col2, col3, col4, col5, col6, col7 = st.columns(
-    [2.5, 1.5, 1.5, 2.0, 1.3, 2.0, 0.8],
+col1, col2, col3, col4, col5, col6, col7, col8 = st.columns(
+    [2.4, 1.4, 1.4, 1.8, 1.4, 1.4, 2.0, 0.8],
     vertical_alignment="bottom"
 )
 
@@ -352,13 +354,21 @@ with col4:
 with col5:
 
     month_filter = st.selectbox(
-        "📅 Month",
+        "📅 Enrolled Month",
         month_options,
         key="month_filter"
     )
 
-# Search
 with col6:
+
+    collection_month_filter = st.selectbox(
+        "💰 Collection Month",
+        month_options,
+        key="collection_month_filter"
+    )
+
+# Search
+with col7:
 
     search_text = st.text_input(
         "🔍 Search",
@@ -367,7 +377,7 @@ with col6:
     )
 
 # Reset
-with col7:
+with col8:
 
     st.markdown("<br>", unsafe_allow_html=True)
 
@@ -577,6 +587,17 @@ with row2[2]:
         format_currency(metrics["one_shot_revenue"])
     )
 
+summary_df = filtered_dashboard_df.copy()
+
+if month_filter != "All":
+    summary_df = summary_df[
+        summary_df["Enrolled Month"] == month_filter
+    ]
+
+metrics = calculate_metrics(
+    summary_df,
+    collection_month_filter
+)
 # ==========================================
 # FINANCE OVERVIEW
 # ==========================================
@@ -608,8 +629,8 @@ with finance2:
 
     title = (
         "📅 All EMI Collection"
-        if month_filter == "All"
-        else f"📅 {month_filter} EMI Collection"
+        if collection_month_filter == "All"
+        else f"📅 {collection_month_filter} EMI Collection"
     )
 
     st.metric(
