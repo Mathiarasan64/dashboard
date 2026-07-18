@@ -450,7 +450,14 @@ if search_text:
     )
 
 # Metrics
-metrics = calculate_metrics(filtered_dashboard_df, month_filter)
+metrics = calculate_metrics(summary_df, month_filter)
+
+summary_df = filtered_dashboard_df.copy()
+
+if month_filter != "All":
+    summary_df = summary_df[
+        summary_df["Enrolled In"] == month_filter
+    ]
 
 # ==========================================
 # LEARNER PROFILE MODE
