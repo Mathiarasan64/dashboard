@@ -142,18 +142,18 @@ def calculate_metrics(df, month_filter):
     payable_fee = active_df["Total Payable Fee"].sum()
 
     collection_df = summary_df[
-    summary_df["Learner Status"]
-    .astype(str)
-    .str.strip()
-    .str.lower()
-    .isin(["active", "inactive"])
-]
+      summary_df["Learner Status"]
+      .astype(str)
+      .str.strip()
+      .str.lower()
+      .isin(["active", "inactive"])
+   ]
 
     # Advance Amount
-   advance_amount = pd.to_numeric(
-    collection_df["Advance"],
-    errors="coerce"
-).fillna(0).sum()
+    advance_amount = pd.to_numeric(
+      collection_df["Advance"],
+      errors="coerce"
+    ).fillna(0).sum()
 
     # Monthly Collection
     # (Include only Active + InActive learners)
