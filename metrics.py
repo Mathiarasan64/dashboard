@@ -203,11 +203,38 @@ def calculate_metrics(df, month_filter):
         monthly_columns
     ].sum().sum()
 
-    # Total Amount Collected
-    amount_collected = (
-        advance_amount
-        + monthly_collection
-    )
+    # ==========================
+    # DEBUG
+    # ==========================
+
+   st.write("### Debug Amount Collected")
+
+   st.write("Advance Amount:", advance_amount)
+
+   st.write("Monthly Collection:", monthly_collection)
+
+   st.write("Final Amount Collected:", advance_amount + monthly_collection)
+
+   st.dataframe(
+      collection_df[
+          [
+            "Student Name",
+            "Advance",
+            "June",
+            "July",
+            "Learner Status"
+         ]
+     ]
+  )
+
+  # ==========================
+  # Total Amount Collected
+  # ==========================
+
+  amount_collected = (
+     advance_amount
+     + monthly_collection
+  )
 
     # Pending Amount
     pending_amount = payable_fee
