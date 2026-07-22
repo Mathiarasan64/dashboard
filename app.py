@@ -472,7 +472,10 @@ if month_filter != "All":
     ]
 
 # Metrics
-metrics = calculate_metrics(summary_df, month_filter)
+summary_metrics = calculate_metrics(
+    summary_df,
+    "All"
+)
 
 # ==========================================
 # LEARNER PROFILE MODE
@@ -540,29 +543,29 @@ Key business indicators for active learners and revenue collection.
 row1 = st.columns(4)
 
 with row1[0]:
-    st.metric(
+    st.metrics(
         "👨‍🎓 Total Learners",
-        metrics["total_learners"],
-        f"{metrics['active_learners']} Active"
+        summary_metrics["total_learners"],
+        f"{summary_metrics['active_learners']} Active"
     )
 
 with row1[1]:
-    st.metric(
+    st.summary_metrics(
     label="🟢 Active Learners",
-    value=metrics["active_learners"],
-    delta=f"{metrics['inactive_learners']} InActive"
+    value=summary_metrics["active_learners"],
+    delta=f"{summary_metrics['inactive_learners']} InActive"
 )
 
 with row1[2]:
     st.metric(
         "💰 Active Revenue",
-        format_currency(metrics["active_sales"])
+        format_currency(summary_metrics["active_sales"])
     )
 
 with row1[3]:
     st.metric(
         "💼 Outstanding",
-        format_currency(metrics["payable_fee"])
+        format_currency(summary_metrics["payable_fee"])
     )
 
 # ---------- Row 2 ----------
@@ -572,23 +575,23 @@ row2 = st.columns(4)
 with row2[0]:
     st.metric(
         "✅ Amount Collected",
-        format_currency(metrics["amount_collected"])
+        format_currency(summary_metrics["amount_collected"])
     )
 
 with row2[1]:
     st.metric(
         "📈 Collection %",
-        f"{metrics['collection_percentage']:.1f}%"
+        f"{summary_metrics['collection_percentage']:.1f}%"
     )
 
 
 with row2[2]:
     st.metric(
         "💵 One-shot Revenue",
-        format_currency(metrics["one_shot_revenue"])
+        format_currency(summary_metrics["one_shot_revenue"])
     )
 
-metrics = calculate_metrics(
+finance_metrics = calculate_metrics(
     summary_df,
     collection_month_filter
 )
@@ -616,7 +619,7 @@ finance1, finance2, finance3, finance4 = st.columns(4)
 with finance1:
     st.metric(
         "👥 Due Learners",
-        metrics["collection_due_count"]
+        finance_metrics["collection_due_count"]
     )
 
 with finance2:
@@ -629,20 +632,20 @@ with finance2:
 
     st.metric(
         title,
-        format_currency(metrics["expected_collection"]),
-        delta=f"Collected: {format_currency(metrics['current_collection'])}"
+        format_currency(finance_metrics["expected_collection"]),
+        delta=f"Collected: {format_currency(finance_metrics['current_collection'])}"
     )
 
 with finance3:
     st.metric(
         "⚠️ High Pending Learners",
-        metrics["high_pending_count"]
+        finance_metrics["high_pending_count"]
     )
 
 with finance4:
     st.metric(
         "💳 EMI Learners",
-        metrics["emi_learners"]
+        finance_metrics["emi_learners"]
     )
 
 st.divider()
