@@ -65,7 +65,10 @@ def calculate_metrics(df, month_filter):
 
     total_sales = df["Total price"].sum()
     closed_sales = closed_df["Total price"].sum()
-    active_sales = active_df["Total price"].sum()
+    active_sales = pd.to_numeric(
+        active_df["Total price"],
+        errors="coerce"
+    ).fillna(0).sum()
 
     # ==========================
     # PAYMENT TYPE
@@ -138,7 +141,10 @@ def calculate_metrics(df, month_filter):
     # ==========================
 
     # Outstanding Amount
-    payable_fee = active_df["Total Payable Fee"].sum()
+    payable_fee = pd.to_numeric(
+       active_df["Total Payable Fee"],
+       errors="coerce"
+    ).fillna(0).sum()
 
     collection_df = df[
        df["Learner Status"]
