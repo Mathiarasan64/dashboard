@@ -543,7 +543,7 @@ Key business indicators for active learners and revenue collection.
 row1 = st.columns(4)
 
 with row1[0]:
-    st.metrics(
+    st.metric(
         "👨‍🎓 Total Learners",
         summary_metrics["total_learners"],
         f"{summary_metrics['active_learners']} Active"
