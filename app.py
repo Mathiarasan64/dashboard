@@ -465,11 +465,6 @@ if search_text:
 
 summary_df = filtered_dashboard_df.copy()
 
-st.write(
-    summary_df[
-        ["Student Name", "Learner Status", "Enrolled Month"]
-    ]
-)
 
 if month_filter != "All":
     summary_df = summary_df[
