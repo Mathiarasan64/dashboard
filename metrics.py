@@ -1,5 +1,4 @@
 import pandas as pd
-import streamlit as st
 
 def calculate_metrics(df, month_filter):
 
@@ -204,37 +203,13 @@ def calculate_metrics(df, month_filter):
     ].sum().sum()
 
     # ==========================
-    # DEBUG
+    # Total Amount Collected
     # ==========================
 
-   st.write("### Debug Amount Collected")
-
-   st.write("Advance Amount:", advance_amount)
-
-   st.write("Monthly Collection:", monthly_collection)
-
-   st.write("Final Amount Collected:", advance_amount + monthly_collection)
-
-   st.dataframe(
-      collection_df[
-          [
-            "Student Name",
-            "Advance",
-            "June",
-            "July",
-            "Learner Status"
-         ]
-     ]
-  )
-
-  # ==========================
-  # Total Amount Collected
-  # ==========================
-
-  amount_collected = (
-     advance_amount
-     + monthly_collection
-  )
+    amount_collected = (
+      advance_amount
+      + monthly_collection
+    )
 
     # Pending Amount
     pending_amount = payable_fee
