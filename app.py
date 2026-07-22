@@ -86,6 +86,7 @@ def reset_filters():
         "learner_filter",
         "payment_filter",
         "status_filter",
+        "course_filter",
         "month_filter",
         "collection_month_filter",
         "search_filter",
@@ -411,7 +412,6 @@ div[data-baseweb="select"] > div{
         "🔄",
         use_container_width=True
     ):
-        "course_filter",
         reset_filters()
         st.rerun()
     
@@ -587,13 +587,6 @@ with row2[2]:
         "💵 One-shot Revenue",
         format_currency(metrics["one_shot_revenue"])
     )
-
-summary_df = filtered_dashboard_df.copy()
-
-if month_filter != "All":
-    summary_df = summary_df[
-        summary_df["Enrolled Month"] == month_filter
-    ]
 
 metrics = calculate_metrics(
     summary_df,
