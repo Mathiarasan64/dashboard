@@ -22,6 +22,21 @@ def calculate_metrics(df, month_filter):
         learner_status.isin(["active", "inactive"])
     ].copy()
 
+    finance_df = active_df.copy()
+
+    if month_filter != "All":
+
+      expected_col = f"Expected EMI Collection for {month_filter}"
+
+      if expected_col in finance_df.columns:
+
+           finance_df = finance_df[
+              pd.to_numeric(
+                  finance_df[expected_col],
+                  errors="coerce"
+              ).fillna(0) > 0
+          ]
+
     # Only Active learners (for KPI)
     active_learners_df = df[
         learner_status == "active"
@@ -124,16 +139,40 @@ def calculate_metrics(df, month_filter):
     one_shot_revenue = one_shot_df["Total price"].sum()
 
     # Learner Count
-    manual_emi_learners = len(manual_emi_df)
-
-    credit_card_learners = len(credit_card_df)
-
-    emi_learners = (
-        manual_emi_learners +
-        credit_card_learners
+        # Learner Count
+    payment = (
+        finance_df["Payment Type"]
+        .astype(str)
+        .str.strip()
+        .str.lower()
     )
 
-    one_shot_learners = len(one_shot_df)
+    manual_emi_learners = len(
+        finance_df[
+            payment.str.contains(
+                "manual emi",
+                na=False
+            )
+        ]
+    )
+
+    credit_card_learners = len(
+        finance_df[
+            payment.str.contains(
+                "credit",
+                na=False
+            )
+        ]
+    )
+
+    emi_learners = (
+        manual_emi_learners
+        + credit_card_learners
+    )
+
+    one_shot_learners = len(
+        one_shot_df
+    )
 
    
     # ==========================
@@ -369,14 +408,14 @@ def calculate_metrics(df, month_filter):
     # Learners who still have outstanding fees
 
     collection_due_count = len(
-        active_df[
-            active_df["Total Payable Fee"] > 0
-        ]
+       finance_df[
+          finance_df["Total Payable Fee"] > 0
+       ]
     )
 
     high_pending_count = len(
-        active_df[
-            active_df["Total Payable Fee"] >= 50000
+        finance_df[
+            finance_df["Total Payable Fee"] >= 50000
         ]
     )
 
