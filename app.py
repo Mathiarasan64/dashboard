@@ -545,21 +545,21 @@ row1 = st.columns(4)
 with row1[0]:
     st.metric(
         "👨‍🎓 Total Learners",
-        summary_metric["total_learners"],
-        f"{summary_metric['active_learners']} Active"
+        summary_metrics["total_learners"],
+        f"{summary_metrics['active_learners']} Active"
     )
 
 with row1[1]:
     st.summary_metric(
     label="🟢 Active Learners",
-    value=summary_metric["active_learners"],
-    delta=f"{summary_metric['inactive_learners']} InActive"
+    value=summary_metrics["active_learners"],
+    delta=f"{summary_metrics['inactive_learners']} InActive"
 )
 
 with row1[2]:
     st.metric(
         "💰 Active Revenue",
-        format_currency(summary_metric["active_sales"])
+        format_currency(summary_metrics["active_sales"])
     )
 
 with row1[3]:
@@ -581,14 +581,14 @@ with row2[0]:
 with row2[1]:
     st.metric(
         "📈 Collection %",
-        f"{summary_metric['collection_percentage']:.1f}%"
+        f"{summary_metrics['collection_percentage']:.1f}%"
     )
 
 
 with row2[2]:
     st.metric(
         "💵 One-shot Revenue",
-        format_currency(summary_metric["one_shot_revenue"])
+        format_currency(summary_metrics["one_shot_revenue"])
     )
 
 finance_metrics = calculate_metrics(
