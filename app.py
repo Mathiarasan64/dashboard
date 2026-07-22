@@ -664,13 +664,13 @@ left, right = st.columns(2)
 
 with left:
     st.plotly_chart(
-        monthly_collection_chart(metric),
+        monthly_collection_chart(finance_metrics),
         width="stretch"
     )
 
 with right:
     st.plotly_chart(
-        revenue_breakdown_chart(metric),
+        revenue_breakdown_chart(finance_metrics),
         width="stretch"
     )
 
@@ -680,13 +680,13 @@ left, right = st.columns(2)
 
 with left:
     st.plotly_chart(
-        expected_actual_chart(metric),
+        expected_actual_chart(finance_metrics),
         width="stretch"
     )
 
 with right:
     st.plotly_chart(
-        collection_pending_chart(metric),
+        collection_pending_chart(finance_metrics),
         width="stretch"
     )
 
@@ -696,13 +696,13 @@ left, right = st.columns(2)
 
 with left:
     st.plotly_chart(
-        learner_distribution_chart(metric),
+        learner_distribution_chart(finance_metrics),
         width="stretch"
     )
 
 with right:
     st.plotly_chart(
-        active_closed_chart(metric),
+        active_closed_chart(finance_metrics),
         width="stretch"
     )
 
