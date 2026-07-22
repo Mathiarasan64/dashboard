@@ -24,19 +24,6 @@ def calculate_metrics(df, month_filter):
 
     finance_df = active_df.copy()
 
-    if month_filter != "All":
-
-      expected_col = f"Expected EMI Collection for {month_filter}"
-
-      if expected_col in finance_df.columns:
-
-           finance_df = finance_df[
-              pd.to_numeric(
-                  finance_df[expected_col],
-                  errors="coerce"
-              ).fillna(0) > 0
-          ]
-
     # Only Active learners (for KPI)
     active_learners_df = df[
         learner_status == "active"
@@ -184,6 +171,8 @@ def calculate_metrics(df, month_filter):
        active_df["Total Payable Fee"],
        errors="coerce"
     ).fillna(0).sum()
+
+    finance_df = active_df.copy()
 
     collection_df = df[
        df["Learner Status"]
