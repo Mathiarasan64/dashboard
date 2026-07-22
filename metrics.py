@@ -141,8 +141,8 @@ def calculate_metrics(df, month_filter):
     # Outstanding Amount
     payable_fee = active_df["Total Payable Fee"].sum()
 
-    collection_df = summary_df[
-      summary_df["Learner Status"]
+    collection_df = df[
+       df["Learner Status"]
       .astype(str)
       .str.strip()
       .str.lower()
