@@ -154,22 +154,7 @@ def calculate_metrics(df, month_filter):
       .isin(["active", "inactive"])
    ]
 
-    import streamlit as st
-
-    st.subheader("Debug - Collection Data")
-
-    st.dataframe(
-    collection_df[
-        ["Student Name", "Learner Status", "Enrolled Month", "Advance"]
-    ]
-)
-
-    print("\n===== COLLECTION DF =====")
-    print(
-        collection_df[
-            ["Student Name", "Learner Status", "Advance"]
-        ]
-    )
+    
     # Advance Amount
     advance_amount = pd.to_numeric(
       collection_df["Advance"],
