@@ -175,15 +175,15 @@ def calculate_metrics(df, month_filter):
     monthly_columns = [
         col
         for col in monthly_columns
-        if col in active_df.columns
+        if col in collection_df.columns
     ]
 
-    active_df[monthly_columns] = active_df[monthly_columns].apply(
+    collection_df[monthly_columns] = collection_df[monthly_columns].apply(
         pd.to_numeric,
         errors="coerce"
     ).fillna(0)
 
-    monthly_collection = active_df[
+    monthly_collection = collection_df[
         monthly_columns
     ].sum().sum()
 
