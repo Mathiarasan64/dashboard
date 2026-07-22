@@ -66,18 +66,7 @@ def calculate_metrics(df, month_filter):
 
     total_sales = df["Total price"].sum()
     closed_sales = closed_df["Total price"].sum()
-    # Revenue should include Closed learners
-    revenue_df = df.copy()
-
-    if month_filter != "All":
-        revenue_df = revenue_df[
-          revenue_df["Enrolled Month"] == month_filter
-       ]
-
-    active_sales = pd.to_numeric(
-        revenue_df["Total price"],
-        errors="coerce"
-).fillna(0).sum()
+    active_sales = active_df["Total price"].sum()
 
     # ==========================
     # PAYMENT TYPE
