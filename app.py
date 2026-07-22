@@ -550,7 +550,7 @@ with row1[0]:
     )
 
 with row1[1]:
-    st.summary_metric(
+    st.metric(
     label="🟢 Active Learners",
     value=summary_metrics["active_learners"],
     delta=f"{summary_metrics['inactive_learners']} InActive"
