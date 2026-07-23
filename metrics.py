@@ -176,21 +176,6 @@ def calculate_metrics(df, month_filter):
 
     collection_df = active_df.copy()
 
-
-    
-    advance_amount = pd.to_numeric(
-        collection_df["Advance"],
-        errors="coerce"
-    ).fillna(0).sum()
-
-    monthly_collection = collection_df[
-         monthly_columns
-    ].sum().sum()
-
-    amount_collected = advance_amount + monthly_collection
-
-   
-
     # Monthly Collection
     # (Include only Active + InActive learners)
     monthly_columns = [
@@ -218,6 +203,20 @@ def calculate_metrics(df, month_filter):
         pd.to_numeric,
         errors="coerce"
     ).fillna(0)
+
+    advance_amount = pd.to_numeric(
+          collection_df["Advance"],
+          errors="coerce"
+    ).fillna(0).sum()
+
+    monthly_collection = collection_df[
+          monthly_columns
+    ].sum().sum()
+
+    amount_collected = (
+         advance_amount
+         + monthly_collection
+    )
 
     monthly_collection = collection_df[
         monthly_columns
@@ -442,11 +441,7 @@ def calculate_metrics(df, month_filter):
         "closed_learners": closed_learners,
         "fully_paid_count": fully_paid_count,
         "collection_due_count": collection_due_count,
-        "debug_advance": collection_df[
-                   ["Student Name", "Learner Status", "Advance"]
-         ].sort_values("Advance", ascending=False).to_dict("records"),
-        "debug_monthly": monthly_collection,
-        "debug_total": amount_collected,
+
 
         # Sales
         "total_sales": total_sales,
