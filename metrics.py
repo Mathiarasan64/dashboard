@@ -24,6 +24,14 @@ def calculate_metrics(df, month_filter):
 
     finance_df = active_df.copy()
 
+    collection_df = pd.concat(
+      [
+        manual_emi_df,
+        credit_card_df
+      ],
+      ignore_index=True
+    )
+
     # Only Active learners (for KPI)
     active_learners_df = df[
         learner_status == "active"
@@ -67,9 +75,6 @@ def calculate_metrics(df, month_filter):
 
     total_sales = df["Total price"].sum()
     closed_sales = closed_df["Total price"].sum()
-    emi_df = active_df[
-         payment.str.contains("manual emi|credit", na=False)
-    ].copy()
 
     active_sales = pd.to_numeric(
          emi_df["Total price"],
@@ -111,6 +116,8 @@ def calculate_metrics(df, month_filter):
         manual_emi_revenue +
         credit_card_revenue
     )
+
+    active_sales = emi_revenue
 
     print("\n========== MANUAL EMI LEARNERS ==========\n")
 
