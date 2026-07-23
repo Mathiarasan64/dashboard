@@ -178,15 +178,16 @@ def calculate_metrics(df, month_filter):
 
 
     
-    # Advance Amount
-    advance_df = collection_df[
-            collection_df["Total Payable Fee"] > 0
-    ].copy()
-
     advance_amount = pd.to_numeric(
-         advance_df["Advance"],
-         errors="coerce"
+                collection_df["Advance"],
+                errors="coerce"
     ).fillna(0).sum()
+
+    monthly_collection = collection_df[
+         monthly_columns
+    ].sum().sum()
+
+    amount_collected = advance_amount + monthly_collection
 
    
 
