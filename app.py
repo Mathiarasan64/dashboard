@@ -490,6 +490,9 @@ summary_metrics = calculate_metrics(
     summary_df,
     "All"
 )
+st.write("Advance:", summary_metrics["debug_advance"])
+st.write("Monthly:", summary_metrics["debug_monthly"])
+st.write("Total:", summary_metrics["debug_total"])
 
 # ==========================================
 # LEARNER PROFILE MODE
