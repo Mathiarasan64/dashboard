@@ -435,6 +435,9 @@ def calculate_metrics(df, month_filter):
         "closed_learners": closed_learners,
         "fully_paid_count": fully_paid_count,
         "collection_due_count": collection_due_count,
+        "debug_advance": advance_amount,
+        "debug_monthly": monthly_collection,
+        "debug_total": amount_collected,
 
         # Sales
         "total_sales": total_sales,
