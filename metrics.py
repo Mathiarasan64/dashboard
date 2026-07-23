@@ -174,13 +174,7 @@ def calculate_metrics(df, month_filter):
 
     finance_df = active_df.copy()
 
-    collection_df = df[
-       df["Learner Status"]
-      .astype(str)
-      .str.strip()
-      .str.lower()
-      .isin(["active", "inactive"])
-   ]
+    collection_df = active_df.copy()
 
 
     
