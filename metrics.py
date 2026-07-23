@@ -225,6 +225,18 @@ def calculate_metrics(df, month_filter):
       + monthly_collection
     )
 
+    print("================================")
+    print("Advance Amount:", advance_amount)
+    print("Monthly Collection:", monthly_collection)
+    print("Total Amount Collected:", amount_collected)
+    print("================================")
+
+    print(
+       collection_df[
+           ["Student Name", "Learner Status", "Advance"]
+       ].sort_values("Advance", ascending=False)
+    )
+
     # Pending Amount
     pending_amount = payable_fee
 
