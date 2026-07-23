@@ -179,19 +179,16 @@ def calculate_metrics(df, month_filter):
 
     
     # Advance Amount
+    advance_df = collection_df[
+            collection_df["Total Payable Fee"] > 0
+    ].copy()
+
     advance_amount = pd.to_numeric(
-      collection_df["Advance"],
-      errors="coerce"
+         advance_df["Advance"],
+         errors="coerce"
     ).fillna(0).sum()
-    import streamlit as st
 
-    st.subheader("Advance Data")
-
-    st.dataframe(
-         collection_df[
-                  ["Student Name", "Learner Status", "Advance"]
-         ].sort_values("Advance", ascending=False)
-    )
+   
 
     # Monthly Collection
     # (Include only Active + InActive learners)
