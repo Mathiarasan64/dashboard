@@ -60,19 +60,6 @@ st.cache_data.clear()
 df = load_data()
 master_df = df.copy()
 
-st.dataframe(
-    df[
-        df["Student Name"].isin([
-            "Prasanth S",
-            "Varsha S",
-            "Salomi Pernati",
-            "Raghavendra Bellary",
-            "Saivadurai"
-        ])
-    ][
-        ["Student Name", "Learner Status", "Advance"]
-    ]
-)
 
 #st.write("Master Rows:", len(master_df))
 #st.write("Current Rows:", len(df))
