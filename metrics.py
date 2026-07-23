@@ -225,6 +225,12 @@ def calculate_metrics(df, month_filter):
       + monthly_collection
     )
 
+    return {
+          "debug_advance": advance_amount,
+          "debug_monthly": monthly_collection,
+          "debug_total": amount_collected
+    }
+
 
     # Pending Amount
     pending_amount = payable_fee
