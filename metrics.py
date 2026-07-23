@@ -174,7 +174,16 @@ def calculate_metrics(df, month_filter):
 
     finance_df = active_df.copy()
 
-    collection_df = active_df.copy()
+    payment = (
+        active_df["Payment Type"]
+        .astype(str)
+        .str.strip()
+        .str.lower()
+    )
+
+    collection_df = active_df[
+       payment.str.contains("manual emi|credit", na=False)
+    ].copy()
 
     # Monthly Collection
     # (Include only Active + InActive learners)
