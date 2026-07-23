@@ -58,6 +58,20 @@ st_autorefresh(
 # ==========================
 st.cache_data.clear()
 df = load_data()
+
+st.dataframe(
+    df[
+        df["Student Name"].isin([
+            "Prasanth S",
+            "Varsha S",
+            "Salomi",
+            "Raghavendra Bellary",
+            "Saivadurai"
+        ])
+    ][
+        ["Student Name", "Learner Status", "Advance"]
+    ]
+)
 master_df = df.copy()
 
 #st.write("Master Rows:", len(master_df))
