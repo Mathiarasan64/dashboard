@@ -65,7 +65,7 @@ st.dataframe(
         df["Student Name"].isin([
             "Prasanth S",
             "Varsha S",
-            "Salomi",
+            "Salomi Pernati",
             "Raghavendra Bellary",
             "Saivadurai"
         ])
