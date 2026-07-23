@@ -183,6 +183,15 @@ def calculate_metrics(df, month_filter):
       collection_df["Advance"],
       errors="coerce"
     ).fillna(0).sum()
+    import streamlit as st
+
+    st.subheader("Advance Data")
+
+    st.dataframe(
+         collection_df[
+                  ["Student Name", "Learner Status", "Advance"]
+         ].sort_values("Advance", ascending=False)
+    )
 
     # Monthly Collection
     # (Include only Active + InActive learners)
