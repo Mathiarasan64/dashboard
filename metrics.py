@@ -69,11 +69,6 @@ def calculate_metrics(df, month_filter):
     total_sales = df["Total price"].sum()
     closed_sales = closed_df["Total price"].sum()
 
-    active_sales = pd.to_numeric(
-         emi_df["Total price"],
-         errors="coerce"
-    ).fillna(0).sum()
-
     # ==========================
     # PAYMENT TYPE
     # ==========================
