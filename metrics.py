@@ -205,17 +205,17 @@ def calculate_metrics(df, month_filter):
     ).fillna(0)
 
     advance_amount = pd.to_numeric(
-          collection_df["Advance"],
-          errors="coerce"
+            collection_df["Advance"],
+            errors="coerce"
     ).fillna(0).sum()
 
     monthly_collection = collection_df[
-          monthly_columns
+               monthly_columns
     ].sum().sum()
 
     amount_collected = (
-         advance_amount
-         + monthly_collection
+             advance_amount +
+             monthly_collection
     )
 
     monthly_collection = collection_df[
