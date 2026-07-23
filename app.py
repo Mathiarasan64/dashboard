@@ -58,6 +58,7 @@ st_autorefresh(
 # ==========================
 st.cache_data.clear()
 df = load_data()
+master_df = df.copy()
 
 st.dataframe(
     df[
@@ -72,7 +73,6 @@ st.dataframe(
         ["Student Name", "Learner Status", "Advance"]
     ]
 )
-master_df = df.copy()
 
 #st.write("Master Rows:", len(master_df))
 #st.write("Current Rows:", len(df))
