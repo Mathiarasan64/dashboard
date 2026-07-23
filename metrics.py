@@ -182,11 +182,6 @@ def calculate_metrics(df, month_filter):
       .isin(["active", "inactive"])
    ]
 
-    st.write(
-    collection_df[
-        ["Student Name", "Learner Status", "Advance"]
-    ]
-)
 
     
     # Advance Amount
