@@ -491,8 +491,7 @@ summary_metrics = calculate_metrics(
     "All"
 )
 
-st.write("Monthly:", summary_metrics["debug_monthly"])
-st.write("Total:", summary_metrics["debug_total"])
+
 
 # ==========================================
 # LEARNER PROFILE MODE
